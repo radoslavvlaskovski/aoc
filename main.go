@@ -3,7 +3,7 @@ package main
 import "fmt"
 
 func main() {
-    result := Add(5, 3)
+    result := solveOne2()
     fmt.Printf("The result is: %d\n", result)
 }
 

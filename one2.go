@@ -5,13 +5,11 @@ import (
     "log"
     "os"
     "strings"
-    "sort"
-    "math"
     "strconv"
     "fmt"
 )
 
-func solveOne() uint64 {
+func solveOne2() uint64 {
 	file, err := os.Open("input1")
     if err != nil {
         log.Fatal(err)
@@ -21,7 +19,7 @@ func solveOne() uint64 {
     scanner := bufio.NewScanner(file)
 
     var valuesLeft []int
-    var valuesRight []int
+    valuesRight := make(map[int]uint64)
 
     for scanner.Scan() {
         line := scanner.Text()
@@ -32,18 +30,24 @@ func solveOne() uint64 {
         rightValue, _ := strconv.Atoi(words[1])
 
 	valuesLeft = append(valuesLeft, leftValue)
-	valuesRight = append(valuesRight, rightValue)
+
+	value, exists := valuesRight[rightValue]
+	if exists {
+	    valuesRight[rightValue] = value + 1
+	} else {
+	    valuesRight[rightValue] = 1
+	}
     }
 
-    sort.Ints(valuesLeft)
-    sort.Ints(valuesRight)
 
-
-    var diff uint64
-    for i, _ := range valuesLeft {
-	fmt.Println(float64(valuesLeft[i] - valuesRight[i]))
-        diff += uint64(math.Round(math.Abs(float64(valuesLeft[i] - valuesRight[i]))))
+    var sim uint64
+    for _, leftV := range valuesLeft {
+         value, exists := valuesRight[leftV]
+	 if exists {
+             fmt.Println(value * uint64(leftV))
+	     sim += value * uint64(leftV)
+	 }
     }
 
-    return diff;
+    return sim;
 }
